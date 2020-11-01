@@ -1,0 +1,50 @@
+<form [formGroup]="cardForm">
+    <div class="wrap-input100 w-50">
+        <div class="label-input100">Title</div>
+        <input type="text" formControlName="title"placeholder="Enter title" class="input100">
+        <span class="focus-input100"></span>
+        <div class="error-msg t50" *ngIf="getControl('title').touched && getControl('title').invalid">
+            Title is required.
+        </div>
+        <div class="error-msg t50" *ngIf="duplicateTitle">
+            Card with same title already exists.
+        </div>
+    </div>
+    <div class="wrap-input100">
+        <div class="label-input100">Description</div>
+        <textarea class="input100" placeholder="Enter description of card" formControlName="description"></textarea>
+        <span class="focus-input100"></span>
+        <div class="error-msg t50" *ngIf="getControl('description').touched && getControl('description').invalid">
+            Description is required.
+        </div>
+    </div>
+    <div class="d-flex">
+        <div class="wrap-input100 mr-20">
+            <div class="label-input100">Comments</div>
+            <textarea class="input100"placeholder="Enter comment" (input)="duplicateComment = false;" formControlName="comment"></textarea>
+            <span class="focus-input100"></span>
+            <div class="error-msg t50" *ngIf="cardForm.touched && duplicateComment">
+                Same Comment already exists on same timestamp.
+            </div>
+        </div>
+        <img src="./../../../assets/images/add.png" alt="Add"
+        title="Add Comment" class="mt-15 add-icon" (click)="addComment()">
+    </div>
+    <div>
+        <ng-container *ngFor="let comment of cardForm?.controls?.comments.value">
+            <div class="d-flex">
+                <img src="./../../../assets/images/remove.png" alt="delete"
+                title="Delete Comment" class="edit-icon mr-20" (click)="removeComment(comment)" style="width: 20px; height: 20px;">
+                <div class="timestamp mr-20">
+                    {{comment?.timestamp}}
+                </div>
+                <div class="comment">
+                    {{comment?.comment}}
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <div class="d-flex">
+        <div class="solid-btn ml-auto" (click)="saveUpdate()">{{card ? 'Save' : 'Add'}}</div>
+    </div>
+</form>

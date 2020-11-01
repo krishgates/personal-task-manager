@@ -1,0 +1,58 @@
+<div class="list" *ngIf="list">
+    <div class="list-header space-between">
+        <div class="list-title">
+            {{list?.title}}
+        </div>
+        <div class="outline-btn delete" (click)="deleteList()">Delete</div>
+    </div>
+    <div class="card-wrapper" id="{{list?.title}}" (drop)="drop($event, listItem)" (dragover)="allowDrop($event)" #listItem>
+        <div class="card" draggable="true" id="{{card?.title}}" (drop)="dropOnCard($event, card?.title)" (dragover)="allowDrop($event)" (dragstart)="drag($event, card)" *ngFor="let card of list?.cards">
+            <div class="card-header space-between">
+                <div class="card-title">{{card?.title}} &nbsp;
+                    <img src="./../../../assets/images/edit.png" alt="edit" title="Edit" class="edit-icon"  (click)="editdialog.style.display = 'block'; currentCard = card">
+                </div>
+                <img src="./../../../assets/images/delete.png" (click)="deleteCard(card?.title)" alt="delete"
+                    title="delete" class="delete-icon">
+            </div>
+            <div class="card-content">
+                {{card?.description}}
+            </div>
+        </div>
+        <div *ngIf="list.cards.length < 1">
+            <div class="card-content">
+                Add cards to the list...
+            </div>
+        </div>
+    </div>
+    <div class="solid-btn ml-auto" (click)="dialog.style.display = 'block'">
+        Add card
+    </div>
+</div>
+<div class="modal" #dialog>
+    <div class="block">
+        <div class="header d-flex">
+            <div class="title">
+                Add New Card
+            </div>
+            <img src="./../../../assets/images/delete.png" (click)="dialog.style.display = 'none'; dialog.cardForm?.reset()" alt="close"
+            title="close" class="ml-auto delete-icon">
+        </div>
+        <div class="content">
+            <app-card [list]="list"  (saveUpdated)="dialog.style.display = 'none'; dialog.cardForm?.reset()"></app-card>
+        </div>
+    </div>
+</div>
+<div class="modal" #editdialog>
+    <div class="block">
+        <div class="header d-flex">
+            <div class="title">
+                Edit Card
+            </div>
+            <img src="./../../../assets/images/delete.png" (click)="editdialog.style.display = 'none'; currentCard = null" alt="close"
+            title="close" class="ml-auto delete-icon">
+        </div>
+        <div class="content">
+            <app-card [list]="list" *ngIf="currentCard" [card]="currentCard" (saveUpdated)="editdialog.style.display = 'none'; currentCard = null"></app-card>
+        </div>
+    </div>
+</div>
